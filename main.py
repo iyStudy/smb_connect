@@ -128,11 +128,14 @@ def sync_directories(conn, local_dir, remote_dir, share_name):
             local_mtime = os.path.getmtime(local_path)
             remote_mtime = datetime.fromtimestamp(remote_files[local_name]).timestamp()
             remote_path = os.path.join(remote_dir, local_name).replace('\\', '/')
-            
-            if local_mtime > remote_mtime:
+
+            if local_mtime > remote_mtime and (local_mtime - remote_mtime) > 30:
                 update_remote_file(conn, local_path, remote_path, share_name)
-            elif local_mtime < remote_mtime:
+                # ローカルファイルの更新日時変更
+                os.utime(path=local_path, times=None)
+            elif local_mtime < remote_mtime and (remote_mtime - local_mtime) > 30:
                 update_local_file(conn, local_path, remote_path, share_name)
+
 
 
 def sync():
@@ -189,7 +192,7 @@ if __name__ == '__main__':
     # 画面の作成
     root = tk.Tk()
     root.title('SMB同期ツール')
-    root.geometry('350x350')
+    root.geometry('400x400')
 
     # SEVER_IPラベルの作成
     lb_server_ip = tk.Label(root, text='SERVER_IP')
