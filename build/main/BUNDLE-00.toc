@@ -1,0 +1,3 @@
+([('main',
+   '/Users/a71378/Documents/GitHub/smb_connect/dist/main',
+   'EXECUTABLE')],)
