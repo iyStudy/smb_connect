@@ -39,8 +39,6 @@ spec = importlib.util.spec_from_file_location("config", config_path)
 config = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(config)
 
-
-
 server_ip = config.SERVER_IP  # サーバーのIPアドレス
 username = config.USERNAME  # ユーザー名
 password = config.PASSWORD  # パスワード
@@ -72,7 +70,7 @@ def update_remote_file(conn, local_path, remote_path, share_name):
     """
     with open(local_path, 'rb') as file_obj:
         conn.storeFile(share_name, remote_path, file_obj) # storeFileメソッドを使用してファイルをアップロード
-        print(f"Updated remote file: {remote_path}")
+        print(f"Upload file: {remote_path}")
 
 def update_local_file(conn, local_path, remote_path, share_name):
     """
@@ -80,7 +78,7 @@ def update_local_file(conn, local_path, remote_path, share_name):
     """
     with open(local_path, 'wb') as file_obj:
         conn.retrieveFile(share_name, remote_path, file_obj) # retrieveFileメソッドを使用してファイルをダウンロード
-        print(f"Updated local file: {local_path}")
+        print(f"Download file: {local_path}")
 
 
 def sync_directories(conn, local_dir, remote_dir, share_name):
@@ -139,9 +137,7 @@ def sync_directories(conn, local_dir, remote_dir, share_name):
                 os.utime(path=remote_path, times=None)
 
 
-
 def sync():
-
     server_ip = en_sever_ip.get()  # サーバーのIPアドレス
     username = en_username.get()  # ユーザー名
     password = en_password.get()  # パスワード
@@ -171,21 +167,18 @@ REMOTE_DIRECTORY_PATH = '{remote_directory_path}'
 
         # 接続を試みる
         if not conn.connect(server_ip, 445):
-            print("接続に失敗しました。")
-            lb_msg.config(text="接続に失敗しました。")
+            print("サーバーへの接続に失敗しました。")
+            lb_msg.config(text="サーバーへの接続に失敗しました。")
         else:
-            print("接続に成功しました。")
-            lb_msg.config(text="接続に成功しました。")
-
-            shared_resource = 'erina$'  # 共有リソース名
-            remote_directory_path = '/'  # ルートディレクトリ、または同期したい特定のパス
+            print("サーバーへの接続に成功しました。")
+            lb_msg.config(text="サーバーへの接続に成功しました。")
 
             # 同期関数の呼び出し
             sync_directories(conn, local_directory_path, remote_directory_path, shared_resource)
         
     except Exception as e:
         print(f"Error: {e}")
-        lb_msg.config(text=f"接続エラー")
+        lb_msg.config(text=f"接続エラー: {e}")
 
     # 接続を切断
     conn.close()
