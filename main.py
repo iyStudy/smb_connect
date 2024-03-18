@@ -135,6 +135,8 @@ def sync_directories(conn, local_dir, remote_dir, share_name):
                 os.utime(path=local_path, times=None)
             elif local_mtime < remote_mtime and (remote_mtime - local_mtime) > 30:
                 update_local_file(conn, local_path, remote_path, share_name)
+                # リモートファイルの更新日時変更
+                os.utime(path=remote_path, times=None)
 
 
 
@@ -192,7 +194,7 @@ if __name__ == '__main__':
     # 画面の作成
     root = tk.Tk()
     root.title('SMB同期ツール')
-    root.geometry('400x400')
+    root.geometry('600x400')
 
     # SEVER_IPラベルの作成
     lb_server_ip = tk.Label(root, text='SERVER_IP')
@@ -231,7 +233,7 @@ if __name__ == '__main__':
     en_local_directory_path.grid(row=3, column=1, padx=10, pady=10)
 
     # SHARED_RESOURCEラベルの作成
-    lb_shared_resource = tk.Label(root, text='SHARED_RESOURCE')
+    lb_shared_resource = tk.Label(root, text='SHARED_RESOURCE(共有フォルダ名)')
     lb_shared_resource.grid(row=4, column=0, padx=10, pady=10)
 
     # SHARED_RESOURCEテキストボックスの作成
@@ -240,7 +242,7 @@ if __name__ == '__main__':
     en_shared_resource.grid(row=4, column=1, padx=10, pady=10)
 
     # REMOTE_DIRECTORY_PATHラベルの作成
-    lb_remote_directory_path = tk.Label(root, text='REMOTE_DIRECTORY_PATH')
+    lb_remote_directory_path = tk.Label(root, text='REMOTE_DIRECTORY_PATH(共有フォルダからのPATH)')
     lb_remote_directory_path.grid(row=5, column=0, padx=10, pady=10)
 
     # REMOTE_DIRECTORY_PATHテキストボックスの作成
